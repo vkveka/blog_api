@@ -45,6 +45,9 @@ class UserController extends Controller
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images'), $imageName);
+            $user->update([
+                'image' => $imageName
+            ]);
         }
 
         // // ********* Syntaxe 2 *********
@@ -109,6 +112,9 @@ class UserController extends Controller
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images'), $imageName);
+            $user->update([
+                'image' => $imageName
+            ]);
         }
 
         return response()->json([

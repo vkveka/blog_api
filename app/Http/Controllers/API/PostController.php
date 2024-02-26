@@ -42,6 +42,9 @@ class PostController extends Controller
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images'), $imageName);
+            $post->update([
+                'image' => $imageName
+            ]);
         }
 
         return response()->json([
@@ -79,6 +82,9 @@ class PostController extends Controller
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images'), $imageName);
+            $post->update([
+                'image' => $imageName
+            ]);
         }
 
         return response()->json([

@@ -39,6 +39,9 @@ class CommentController extends Controller
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images'), $imageName);
+            $comment->update([
+                'image' => $imageName
+            ]);
         }
 
         return response()->json([
@@ -77,8 +80,11 @@ class CommentController extends Controller
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images'), $imageName);
+            $comment->update([
+                'image' => $imageName
+            ]);
         }
-
+        
         return response()->json([
             'status' => true,
             'message' => 'Le commentaire a été modifié avec succès !',
