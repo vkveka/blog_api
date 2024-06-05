@@ -39,12 +39,23 @@
                         <button class="btn btn-outline-success" type="submit">Rechercher</button>
                     </form>
                     <div class="btn-group dropstart ms-5 me-3" style="cursor: pointer;">
-                        <img src="../../../public/images/user.png" data-bs-toggle="dropdown" aria-expanded="false"
-                            class="dropdown-toggle" alt="image user non connecté" width="40px">
-                        <ul class="dropdown-menu">
-                            <li><router-link class="dropdown-item" to="/login">Connexion</router-link></li>
-                            <li><router-link class="dropdown-item" to="/register">Inscription</router-link></li>
-                        </ul>
+                        <div v-if="checkAuth">
+                            <img src="../../../public/images/logo.png" data-bs-toggle="dropdown" aria-expanded="false"
+                                class="dropdown-toggle" alt="image user non connecté" width="40px">
+                            <ul class="dropdown-menu">
+                                <li><router-link class="dropdown-item" to="/">Mon Compte</router-link></li>
+                                <li><router-link class="dropdown-item" to="/logout"
+                                        @click="logOut">Deconnexion</router-link></li>
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <img src="../../../public/images/user.png" data-bs-toggle="dropdown" aria-expanded="false"
+                                class="dropdown-toggle" alt="image user non connecté" width="40px">
+                            <ul class="dropdown-menu">
+                                <li><router-link class="dropdown-item" to="/login">Connexion</router-link></li>
+                                <li><router-link class="dropdown-item" to="/register">Inscription</router-link></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -53,6 +64,39 @@
 </template>
 
 <script setup>
+const checkAuth = () => {
+    axios.get('/auth-user', {
+        withCredentials: true, // Assurez-vous que les cookies de session sont envoyés
+    })
+        .then(response => {
+            if (response.data.authenticated) {
+                currentUser.value = response.data.user;
+                isAuthenticated.value = true;
+            } else {
+                currentUser.value = null;
+                isAuthenticated.value = false;
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            currentUser.value = null;
+            isAuthenticated.value = false;
+        });
+};
+
+const logOut = () => {
+    axios.post('/api/logout', {
+        withCredentials: true,
+    })
+        .then(response => {
+            console.log(response)
+            window.location.href = response.data.redirect;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la déconnexion:', error);
+        });
+};
+
 
 </script>
 

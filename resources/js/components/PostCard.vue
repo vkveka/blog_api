@@ -11,8 +11,8 @@
                 :data-bs-target="`#exampleModal_${post.id}`" style="max-height: 600px; object-fit: cover;">
 
             <!-- Modal -->
-            <div class="modal fade" :id="`exampleModal_${post.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true" style="z-index: 9999999999;">
+            <div class="modal fade" :id="`exampleModal_${post.id}`" tabindex="-1"
+                :aria-labelledby="`#exampleModalLabel_${post.id}`" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -24,21 +24,26 @@
                     </div>
                 </div>
             </div>
-
-
-
-            <p class="py-4 px-3">{{ post.content }}</p>
+            <p class="pt-4 px-3">{{ post.content }}</p>
+            <p class="px-3"><b>#{{ formatTags(post.tags) }}</b></p>
         </div>
-        <div class="card-footer">
-            <h6>
-                <b>#{{ formatTags(post.tags) }}</b>
-            </h6>
+        <div class="card-footer d-flex justify-content-around align-items-center">
+            <form @submit.prevent="addComment" method="post" class="d-flex justify-content-center">
+                <input type="text" name="comment" id="comment" placeholder="Ajouter un commentaire"
+                    class="form-control me-2">
+                <span class="input-group-text" id="comment" type="submit">
+                    <i class="fa-regular fa-paper-plane"></i>
+                </span>
+
+            </form>
+            <DropdownActionsPost :post="post" />
         </div>
     </div>
 </template>
 
 <script setup>
-// import { defineProps } from 'vue';
+import { ref } from 'vue';
+import DropdownActionsPost from './DropdownActionsPost.vue';
 
 defineProps({
     post: {
@@ -47,15 +52,24 @@ defineProps({
     }
 });
 
+const tags = ref("");
+const content = ref("");
+const userId = ref("");
+const image = ref(null);
 
 const formatTags = (tags) => {
     return tags.replace(/\s+/g, ' #');
 };
-
 const formatDate = (date) => {
     const dateF = new Date(date);
     return new Intl.DateTimeFormat('default', { dateStyle: 'long' }).format(dateF);
 };
+
+
+
+const addComment = () => {
+
+}
 </script>
 
 <style scoped>

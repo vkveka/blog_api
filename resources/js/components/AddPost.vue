@@ -38,7 +38,10 @@
 
             </div>
             <div class="row">
-                <button type="submit" class="btn btn-dark mt-1 col-1 ms-2">Publier</button>
+                <button type="submit" class="btn btn-dark mt-1 col-1 ms-2">
+                    <i v-if="isLoading" class="fa-solid fa-spinner fa-spin me-2"></i>
+                    <span v-if="!isLoading">Publier</span>
+                </button>
             </div>
         </form>
     </div>
@@ -46,10 +49,13 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const tags = ref("");
 const content = ref("");
 const userId = ref("");
 const image = ref(null);
+const isLoading = ref(false);
 
 const onFileChange = (event) => {
     const target = event.target;
@@ -57,6 +63,7 @@ const onFileChange = (event) => {
         image.value = target.files[0];
     }
 };
+
 
 const addPost = async () => {
     const formData = new FormData();
@@ -67,16 +74,19 @@ const addPost = async () => {
         formData.append('image', image.value);
     }
 
-    try {
-        await fetch('http://localhost:8000/api/posts', {
-            method: 'POST',
-            body: formData,
+    isLoading.value = true;
+
+    axios.post('http://localhost:8000/api/posts', formData)
+        .then(res => {
+            console.log("Success : " + res);
+            router.go(0);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        })
+        .finally(() => {
+            isLoading.value = false;
         });
-        console.log(formData)
-        // Reset the form or handle the response
-    } catch (error) {
-        console.error('Error:', error);
-    }
 }
 </script>
 
