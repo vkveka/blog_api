@@ -13,39 +13,26 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                        </li>
                     </ul>
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Rechercher</button>
                     </form>
                     <div class="btn-group dropstart ms-5 me-3" style="cursor: pointer;">
-                        <div v-if="checkAuth">
-                            <img src="../../../public/images/logo.png" data-bs-toggle="dropdown" aria-expanded="false"
-                                class="dropdown-toggle" alt="image user non connecté" width="40px">
+                        <div v-if="userStore.user">
+                            <img :src="getUserImage(userStore.user.image)" data-bs-toggle="dropdown"
+                                aria-expanded="false" class="dropdown-toggle img_user" alt="image user non connecté"
+                                width="40px">
+                            <!-- <img src="../../../public/images/logo.png" data-bs-toggle="dropdown" aria-expanded="false"
+                                class="dropdown-toggle" alt="image user non connecté" width="40px"> -->
                             <ul class="dropdown-menu">
-                                <li><router-link class="dropdown-item" to="/">Mon Compte</router-link></li>
+                                <li><router-link :user="user" class="dropdown-item"
+                                        :to="{ name: 'user', params: { id: userStore.user.id } }">Mon
+                                        Compte</router-link></li>
                                 <li><router-link class="dropdown-item" to="/logout"
                                         @click="logOut">Deconnexion</router-link></li>
+                                <!-- <li><router-link class="dropdown-item" to="/login">Connexion</router-link></li> -->
+
                             </ul>
                         </div>
                         <div v-else>
@@ -64,40 +51,31 @@
 </template>
 
 <script setup>
-const checkAuth = () => {
-    axios.get('/auth-user', {
-        withCredentials: true, // Assurez-vous que les cookies de session sont envoyés
-    })
-        .then(response => {
-            if (response.data.authenticated) {
-                currentUser.value = response.data.user;
-                isAuthenticated.value = true;
-            } else {
-                currentUser.value = null;
-                isAuthenticated.value = false;
-            }
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            currentUser.value = null;
-            isAuthenticated.value = false;
-        });
-};
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/userStore';
+const router = useRouter();
+const userStore = useUserStore();
 
 const logOut = () => {
-    axios.post('/api/logout', {
-        withCredentials: true,
-    })
+    userStore.removeUser()
+
+    axios.post('/api/logout')
         .then(response => {
             console.log(response)
-            window.location.href = response.data.redirect;
+            router.push('/')
         })
         .catch(error => {
             console.error('Erreur lors de la déconnexion:', error);
         });
 };
 
-
+const getUserImage = (imageName) => {
+    return imageName ? `http://[::1]:5173/public/images/${imageName}` : '../../../public/images/logo.png';
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.img_user {
+    border-radius: 10vh;
+}
+</style>

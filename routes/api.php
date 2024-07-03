@@ -9,8 +9,8 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource("users", App\Http\Controllers\API\UserController::class);
 Route::apiResource("comments", App\Http\Controllers\API\CommentController::class);
-Route::apiResource("posts", App\Http\Controllers\API\PostController::class);
+Route::apiResource("posts", App\Http\Controllers\API\PostController::class)->middleware('auth:sanctum');
 
 Route::post('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
-Route::post('logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+Route::post('logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout')->middleware('auth:web');
 Route::get('/auth-user', [\App\Http\Controllers\AuthController::class, 'checkAuth']);

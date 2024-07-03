@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,10 +26,14 @@ class UpdateUserRequest extends FormRequest
         return [
             'pseudo' => 'nullable|string|max:255',
             'image' => 'nullable|mimes:jpg,jpeg,png,svg|max:2048',
-            'email' => 'unique:users|email|nullable',
+            'email' => [
+                Rule::unique('users', 'email')->ignore($this->user),
+                'email'
+            ],
             'oldPassword' => 'nullable',
             'password' => [
-                'confirmed|nullable',
+                'confirmed',
+                'nullable',
                 Password::min(8)
                     ->mixedCase()
                     ->letters()

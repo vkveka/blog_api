@@ -1,11 +1,11 @@
 <template>
-    <div class="col-2 mx-auto">
-        <h1 class="text-center my-5">Inscription</h1>
-        <form class="row g-3 needs-validation" @submit.prevent="register">
+    <div class="col-4 mx-auto">
+        <h1 class="text-center my-5">Modification des informations</h1>
+        <form class="row g-3 needs-validation" @submit.prevent="validNewDataUser(userStore.user.id)">
             <div class="row mx-auto">
                 <label for="pseudo" class="form-label">Pseudo</label>
                 <div class="input-group has-validation">
-                    <input v-model="pseudo" type="text" class="form-control" id="pseudo" required>
+                    <input v-model="pseudo" type="text" name="pseudo" class="form-control" id="pseudo">
                     <div class="invalid-feedback">
                         Please choose a pseudo.
                     </div>
@@ -14,26 +14,36 @@
             <div class="row mx-auto">
                 <label for="email" class="form-label">Email</label>
                 <div class="input-group has-validation">
-                    <input v-model="email" type="email" class="form-control" id="email" required>
+                    <input v-model="email" type="email" name="email" class="form-control" id="email">
                     <div class="invalid-feedback">
                         Please choose a email.
                     </div>
                 </div>
             </div>
             <div class="row mx-auto">
-                <label for="password" class="form-label">Mot de passe</label>
+                <label for="oldPassword" class="form-label">Mot de passe actuel</label>
                 <div class="input-group has-validation">
-                    <input v-model="password" type="password" class="form-control" id="password" required>
+                    <input type="password" v-model="oldPassword" name="oldPassword" class="form-control"
+                        id="oldPassword">
                     <div class="invalid-feedback">
                         Please choose a password.
                     </div>
                 </div>
             </div>
             <div class="row mx-auto">
-                <label for="password" class="form-label">Confirmation du mot de passe</label>
+                <label for="password" class="form-label">Nouveau mot de passe</label>
                 <div class="input-group has-validation">
-                    <input v-model="passwordConfirmation" type="password" class="form-control" id="passwordConfirm"
-                        required>
+                    <input type="password" v-model="password" name="password" class="form-control" id="password">
+                    <div class="invalid-feedback">
+                        Please choose a password.
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-auto">
+                <label for="password_confirmation" class="form-label">Confirmation du nouveau mot de passe</label>
+                <div class="input-group has-validation">
+                    <input name="password_confirmation" v-model="passwordConfirmation" type="password"
+                        class="form-control" id="password_confirmation">
                     <div class="invalid-feedback">
                         Please choose a passwordConfirm.
                     </div>
@@ -65,8 +75,9 @@
             <div class="row mt-4 text-center mx-auto">
                 <button class="btn btn-dark" type="submit">
                     <i v-if="isLoading" class="fa-solid fa-spinner fa-spin me-2"></i>
-                    <span v-if="!isLoading">S'inscrire</span>
+                    <span v-if="!isLoading">Modifier</span>
                 </button>
+                <div v-if="errorMessage" style="color: red;">{{ errorMessage }}</div>
             </div>
         </form>
     </div>
@@ -76,45 +87,76 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/userStore';
+
 const router = useRouter();
 const isLoading = ref(false);
 const email = ref("");
 const pseudo = ref("");
+const oldPassword = ref("");
 const password = ref("");
 const passwordConfirmation = ref("");
 const image = ref(null);
 const userStore = useUserStore();
+const errorMessage = ref("")
+email.value = userStore.user.email;
+pseudo.value = userStore.user.pseudo;
 
 const onFileChange = (event) => {
     const target = event.target;
     image.value = target.files[0];
 };
 
-
-const register = () => {
+const validNewDataUser = (userId) => {
     isLoading.value = true;
     const formData = new FormData();
-    formData.append('email', email.value);
-    formData.append('pseudo', pseudo.value);
-    formData.append('password', password.value);
-    formData.append('password_confirmation', passwordConfirmation.value);
+    formData.append('_method', 'put');
+    if (password.value !== null && password.value !== '') {
+        // if (oldPassword.value)
+        if (password.value !== passwordConfirmation.value) {
+            errorMessage.value = "Les mots de passe ne correspondent pas.";
+            isLoading.value = false;
+            return;
+        } else {
+            formData.append('password', password.value);
+            formData.append('oldPassword', oldPassword.value);
+            formData.append('password_confirmation', passwordConfirmation.value);
+            console.log('Password OK')
+        }
+    } else {
+        console.log('null')
+    }
+    console.log(formData)
+    if (email.value && email.value !== '') {
+        formData.append('email', email.value);
+    }
+    if (pseudo.value && pseudo.value !== '') {
+        formData.append('pseudo', pseudo.value);
+    }
     if (image.value) {
         formData.append('image', image.value);
     }
-    console.log(formData)
-    axios.post(`http://localhost:8000/api/users`, formData)
-        .then(res => {
-            // userStore.storeUserData(res.data.user)
-            console.log(res)
-            router.push('/');
-        })
-        .catch(error => {
-            console.log(error)
-        })
-        .finally(() => {
+    if (formData) {
+        let formDataEntriesCount = 0;
+        for (const pair of formData.entries()) {
+            formDataEntriesCount++;
+        }
+        if (formDataEntriesCount > 1) {
+            axios.post(`http://localhost:8000/api/users/${userId}`, formData)
+                .then(res => {
+                    console.log("Success : " + res);
+                    console.log(formData);
+                    isLoading.value = false;
+                    // router.go(0);
+                })
+                .catch(error => {
+                    console.log(formData);
+                    console.error('Error:', error);
+                    isLoading.value = false;
+                });
+        } else {
             isLoading.value = false;
-        });
-
+        }
+    }
 }
 </script>
 

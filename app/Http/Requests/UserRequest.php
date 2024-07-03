@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
     {
         return [
             'pseudo' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,svg,heic|max:2048',
             'email' => 'unique:users|email|required',
             'password' => [
                 'required',

@@ -18,7 +18,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import PostCard from './PostCard.vue';
 import AddPost from './AddPost.vue';
-
+const containerId = ref('');
 const posts = ref([]);
 
 const recupPosts = async () => {
@@ -26,7 +26,6 @@ const recupPosts = async () => {
         .then((res) => {
             posts.value = res.data.posts;
             console.log(res.data.posts)
-            // console.log(posts.value)
         })
         .catch((error) => {
             console.log(error.response.data.message)
@@ -40,7 +39,7 @@ onMounted(() => {
 
 <style scoped>
 .item {
-    margin: 10px;
+    margin: 10px 10px 20px 0;
 }
 
 .masonry-container {

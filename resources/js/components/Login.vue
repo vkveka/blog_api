@@ -24,7 +24,7 @@
             <div class="row mt-4 text-center mx-auto">
                 <button class="btn btn-dark" type="submit">
                     <i v-if="isLoading" class="fa-solid fa-spinner fa-spin me-2"></i>
-                    <span v-if="!isLoading">Publier</span>
+                    <span v-if="!isLoading">Se connecter</span>
                 </button>
             </div>
         </form>
@@ -34,27 +34,37 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/userStore';
+const router = useRouter();
 const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
+const userStore = useUserStore();
 
 const logIn = () => {
     isLoading.value = true;
 
     axios.get('/sanctum/csrf-cookie')
         .then(() => {
-            return axios.post('api/login', {
+            axios.post('api/login', {
                 email: email.value,
                 password: password.value
-            });
+            })
+                .then((res) => {
+                    userStore.storeUserData(res.data.user)
+                    router.push('/')
+                    // router.go(0)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+
         })
-        .then(response => {
-            console.log('Logged in successfully', response.data);
-            window.location.href = response.data.redirect;
-        })
-        .catch(error => {
-            console.error('Error logging in:', error);
+
+        .catch(() => {
+            console.log('Problème d\'authentification. Rechargez la page')
+            alert('Problème d\'authentification. Rechargez la page')
         })
         .finally(() => {
             isLoading.value = false;

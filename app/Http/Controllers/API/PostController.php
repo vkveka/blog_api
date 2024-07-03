@@ -5,9 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Validation\ValidationException;
 
 class PostController extends Controller
@@ -17,10 +18,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //$posts = Post::all();
+        // dd(Auth::user());
         $posts = Post::with('comments', 'user')->orderBy('created_at', 'DESC')->get();
-
-        // On retourne les résultats en JSON
         return response()->json([
             'status' => true,
             'message' => 'Posts récupérés avec succès',
@@ -73,13 +72,13 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+        // dd($request);
         $post->update([
             'content' => $request->content,
             'tags' => $request->tags,
-            'user_id' => $request->user_id,
         ]);
 
-        if ($request->image) {
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->extension();
             $image->move(public_path('images'), $imageName);

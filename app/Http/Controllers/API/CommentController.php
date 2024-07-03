@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Comment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
@@ -67,7 +68,7 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment)
     {
         $comment->update([
             'content' => $request->content,
@@ -84,7 +85,7 @@ class CommentController extends Controller
                 'image' => $imageName
             ]);
         }
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Le commentaire a été modifié avec succès !',

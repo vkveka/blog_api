@@ -65,6 +65,8 @@ const onFileChange = (event) => {
 };
 
 
+
+
 const addPost = async () => {
     const formData = new FormData();
     formData.append('content', content.value);

@@ -7,7 +7,7 @@
             :aria-labelledby="`updatePostLabel_${post.id}`" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <form @submit.prevent="updatePost">
+                    <form @submit.prevent="updatePost(post.id)">
                         <div class="modal-header">
                             <b>Modification du post</b>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -21,7 +21,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-secondary"
                                 data-bs-dismiss="modal">Close</button>
-                            <button type="button" @click="updatePost(post.id)" class="btn btn-dark">Enregistrer</button>
+                            <button type="submit" class="btn btn-dark" data-bs-dismiss="modal">Enregistrer</button>
                         </div>
                     </form>
                 </div>
@@ -72,27 +72,31 @@ const onFileUpdate = (event) => {
     const target = event.target;
     if (target.files && target.files[0]) {
         newImage.value = target.files[0];
+        // console.log(newImage.value)
     }
 };
 
 const updatePost = (postId) => {
     const formData = new FormData();
+    formData.append('_method', 'put');
     formData.append('content', newContent.value);
     formData.append('tags', newTags.value);
-    if (newImage) {
+    if (newImage.value) {
         formData.append('image', newImage.value);
     }
+    console.log(formData)
 
-    axios.put(`http://localhost:8000/api/posts/${postId}`, formData, { 'content-type': 'multipart/form-data' })
+    axios.post(`/api/posts/${postId}`, formData)
         .then(res => {
             console.log("Success : " + res);
-            console.log(formData)
+            router.go(0);
         })
         .catch(error => {
-            console.log(formData)
             console.error('Error:', error);
-        })
+        });
+
 }
+
 
 const removePost = (postId) => {
     axios.delete(`http://localhost:8000/api/posts/${postId}`)

@@ -15,12 +15,13 @@ class AuthController extends Controller
 
             // Si la connexion fonctionne, on récupère l'utilisateur et on charge son rôle
             $authUser = User::find(Auth::user()->id);
-            $authUser->load('role');
+            // $authUser->load('role');
+            // dd($authUser);
 
             return response()->json([
                 'user' => $authUser,
                 'message' => 'Vous êtes connecté',
-                'redirect' => route('/')
+                // 'redirect' => route('/')
             ]);
         } else {
             return response()->json([
@@ -37,7 +38,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Déconnexion réussie',
-            'redirect' => route('/')
+            // 'redirect' => route('/')
         ]);
     }
 
