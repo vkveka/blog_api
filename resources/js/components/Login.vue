@@ -41,6 +41,9 @@ const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const userStore = useUserStore();
+if (userStore.user) {
+    router.push('/');
+}
 
 const logIn = () => {
     isLoading.value = true;

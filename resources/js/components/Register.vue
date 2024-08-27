@@ -85,6 +85,10 @@ const passwordConfirmation = ref("");
 const image = ref(null);
 const userStore = useUserStore();
 
+if (userStore.user) {
+    router.push('/');
+}
+
 const onFileChange = (event) => {
     const target = event.target;
     image.value = target.files[0];

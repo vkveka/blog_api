@@ -4,6 +4,7 @@ import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import EditAccount from '../components/EditAccount.vue'
 
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -20,7 +21,7 @@ const router = createRouter({
         {
             path: '/register',
             name: 'register',
-            component: Register
+            component: Register,
         },
         {
             path: '/logout',
