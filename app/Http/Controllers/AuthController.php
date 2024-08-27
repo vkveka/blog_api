@@ -17,6 +17,7 @@ class AuthController extends Controller
             $authUser = User::find(Auth::user()->id);
             // $authUser->load('role');
             // dd($authUser);
+            $request->session()->regenerate();
 
             return response()->json([
                 'user' => $authUser,

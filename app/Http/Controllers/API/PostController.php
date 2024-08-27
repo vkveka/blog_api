@@ -13,13 +13,18 @@ use Illuminate\Validation\ValidationException;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except('index', 'show');
+    }
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // dd(Auth::user());
-        $posts = Post::with('comments', 'user')->orderBy('created_at', 'DESC')->get();
+        $posts = Post::with('comments', 'user', 'comments.user')->orderBy('created_at', 'DESC')->get();
         return response()->json([
             'status' => true,
             'message' => 'Posts récupérés avec succès',
@@ -72,7 +77,7 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        // dd($request);
+        $this->authorize('update', $post);
         $post->update([
             'content' => $request->content,
             'tags' => $request->tags,
@@ -99,6 +104,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
         $post->delete();
 
         return response()->json([

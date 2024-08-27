@@ -1,7 +1,8 @@
 <template>
     <div>
         <i class="fa-regular fa-pen-to-square me-2" data-bs-toggle="modal" :data-bs-target="`#updatePost_${post.id}`"
-            style="color: #f7c12a; font-size: 1.3em;"></i>
+            style="color: #f7c12a; font-size: 1.3em;"
+            v-if="(userStore.user && (post.user_id == userStore.user.id))"></i>
 
         <div class="modal fade" :id="`updatePost_${post.id}`" tabindex="-1"
             :aria-labelledby="`updatePostLabel_${post.id}`" aria-hidden="true">
@@ -29,7 +30,8 @@
         </div>
 
         <i class="fa-regular fa-trash-can" data-bs-toggle="modal" :data-bs-target="`#removePost_${post.id}`"
-            style="color: red; font-size: 1.3em;"></i>
+            style="color: red; font-size: 1.3em;"
+            v-if="(userStore.user && (post.user_id == userStore.user.id || userStore.user.role_id == 2))"></i>
         <div class="modal fade" :id="`removePost_${post.id}`" tabindex="-1"
             :aria-labelledby="`removePostLabel_${post.id}`" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -52,9 +54,11 @@
 </template>
 
 <script setup>
+import { useUserStore } from '../stores/userStore';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 const router = useRouter();
+const userStore = useUserStore();
 
 const props = defineProps({
     post: {

@@ -10,10 +10,10 @@
                     <input v-model="tags" type="text" name="tags" id="tags" placeholder="Tags"
                         class="form-control col-3 mt-2">
                 </div>
-                <div class="col-6">
+                <!-- <div class="col-6">
                     <input v-model="userId" type="text" name="user_id" id="user_id" placeholder="User Id"
                         class="form-control mt-2 col-3">
-                </div>
+                </div> -->
             </div>
             <div class="col-3">
                 <div class="input-group mb-3 mt-2 col-3">
@@ -35,7 +35,10 @@
                         </label>
                     </div>
                 </div>
-
+                <div class="position-relative">
+                    <!-- <img src="../../../public/images/delete.png" class="position-absolute top-0 deleteImage" alt="Suppression image blog_api" width="10px" height="10px"> -->
+                    <img id="preview" src="" alt="Preview">
+                </div>
             </div>
             <div class="row">
                 <button type="submit" class="btn btn-dark mt-1 col-1 ms-2">
@@ -50,28 +53,43 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/userStore';
+
 const router = useRouter();
 const tags = ref("");
 const content = ref("");
-const userId = ref("");
+// const userId = ref("");
 const image = ref(null);
 const isLoading = ref(false);
+const userStore = useUserStore();
 
 const onFileChange = (event) => {
     const target = event.target;
+    const preview = document.getElementById('preview');
     if (target.files && target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;  // Set the preview image's source to the file content
+            preview.style.display = 'block'; // Show the image element
+        }
+
+        reader.readAsDataURL(target.files[0]); // Read the file as a data URL
+
         image.value = target.files[0];
     }
 };
 
 
-
+const imageForm = document.getElementById('image');
+if (imageForm) {
+    imageForm.addEventListener('change', onFileChange);
+}
 
 const addPost = async () => {
     const formData = new FormData();
     formData.append('content', content.value);
     formData.append('tags', tags.value);
-    formData.append('user_id', userId.value);
+    formData.append('user_id', userStore.user.id);
     if (image.value) {
         formData.append('image', image.value);
     }
@@ -206,5 +224,22 @@ const addPost = async () => {
 
 .hidden {
     display: none;
+}
+
+img#preview {
+    display: none;
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 2vh;
+    box-sizing: border-box;
+}
+
+img#preview:hover {
+    outline: 5px rgb(198, 198, 198) solid;
+}
+
+.deleteImage {
+    cursor: pointer;
 }
 </style>

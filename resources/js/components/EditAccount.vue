@@ -1,85 +1,96 @@
 <template>
-    <div class="col-4 mx-auto">
-        <h1 class="text-center my-5">Modification des informations</h1>
-        <form class="row g-3 needs-validation" @submit.prevent="validNewDataUser(userStore.user.id)">
-            <div class="row mx-auto">
-                <label for="pseudo" class="form-label">Pseudo</label>
-                <div class="input-group has-validation">
-                    <input v-model="pseudo" type="text" name="pseudo" class="form-control" id="pseudo">
-                    <div class="invalid-feedback">
-                        Please choose a pseudo.
+    <h1 class="text-center my-5">Modification des informations</h1>
+    <div class="container d-flex card">
+        <div class="row card-body py-5">
+            <form class="col-md-10 row g-5 needs-validation" @submit.prevent="validNewDataUser(userStore.user.id)">
+                <div class="col-md-2 my-auto">
+                    <div class="input-group mb-3 mt-2 col-3">
+                        <div v-if="!userStore.user.image" class="dropzone-container">
+                            <label for="image" class="dropzone-label">
+                                <div class="dropzone-content">
+                                    <svg class="dropzone-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                    </svg>
+                                    <p class="dropzone-text"><span class="dropzone-text-bold">Click to upload</span> or
+                                        drag
+                                        and
+                                        drop</p>
+                                    <p class="dropzone-subtext">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                </div>
+                                <input id="image" type="file" class="hidden" @change="onFileChange" name="image" />
+                            </label>
+                        </div>
+                        <div v-else="">
+                            <label for="image">
+                                <img :src="`../images/${userStore.user.image}`" alt="img user"
+                                    style="width: 100%; border-radius: 5%;">
+                                <input id="image" type="file" class="hidden" @change="onFileChange" name="image" />
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mx-auto">
-                <label for="email" class="form-label">Email</label>
-                <div class="input-group has-validation">
-                    <input v-model="email" type="email" name="email" class="form-control" id="email">
-                    <div class="invalid-feedback">
-                        Please choose a email.
-                    </div>
-                </div>
-            </div>
-            <div class="row mx-auto">
-                <label for="oldPassword" class="form-label">Mot de passe actuel</label>
-                <div class="input-group has-validation">
-                    <input type="password" v-model="oldPassword" name="oldPassword" class="form-control"
-                        id="oldPassword">
-                    <div class="invalid-feedback">
-                        Please choose a password.
-                    </div>
-                </div>
-            </div>
-            <div class="row mx-auto">
-                <label for="password" class="form-label">Nouveau mot de passe</label>
-                <div class="input-group has-validation">
-                    <input type="password" v-model="password" name="password" class="form-control" id="password">
-                    <div class="invalid-feedback">
-                        Please choose a password.
-                    </div>
-                </div>
-            </div>
-            <div class="row mx-auto">
-                <label for="password_confirmation" class="form-label">Confirmation du nouveau mot de passe</label>
-                <div class="input-group has-validation">
-                    <input name="password_confirmation" v-model="passwordConfirmation" type="password"
-                        class="form-control" id="password_confirmation">
-                    <div class="invalid-feedback">
-                        Please choose a passwordConfirm.
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="input-group mb-3 mt-2 col-3">
-                    <div class="dropzone-container">
-                        <label for="image" class="dropzone-label">
-                            <div class="dropzone-content">
-                                <svg class="dropzone-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                </svg>
-                                <p class="dropzone-text"><span class="dropzone-text-bold">Click to upload</span> or drag
-                                    and
-                                    drop</p>
-                                <p class="dropzone-subtext">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                <div class="col-md-4 my-3">
+                    <div class="mx-auto">
+                        <label for="pseudo" class="form-label">Pseudo</label>
+                        <div class="input-group has-validation">
+                            <input v-model="pseudo" type="text" name="pseudo" class="form-control bg-dark border-0 text-light" id="pseudo">
+                            <div class="invalid-feedback">
+                                Please choose a pseudo.
                             </div>
-                            <input id="image" type="file" class="hidden" @change="onFileChange" name="image" />
-                        </label>
+                        </div>
+                    </div>
+                    <div class="mx-auto">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-group has-validation">
+                            <input v-model="email" type="email" name="email" class="form-control bg-dark border-0 text-light" id="email">
+                            <div class="invalid-feedback">
+                                Please choose a email.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 my-3">
+                    <label for="oldPassword" class="form-label">Mot de passe actuel</label>
+                    <div class="input-group has-validation">
+                        <input type="password" v-model="oldPassword" name="oldPassword" class="form-control bg-dark border-0 text-light"
+                            id="oldPassword">
+                        <div class="invalid-feedback">
+                            Please choose a password.
+                        </div>
+                    </div>
+                    <label for="password" class="form-label">Nouveau mot de passe</label>
+                    <div class="input-group has-validation">
+                        <input type="password" v-model="password" name="password" class="form-control bg-dark border-0 text-light" id="password">
+                        <div class="invalid-feedback">
+                            Please choose a password.
+                        </div>
+                    </div>
+                    <label for="password_confirmation" class="form-label">Confirmation du nouveau mot de passe</label>
+                    <div class="input-group has-validation">
+                        <input name="password_confirmation" v-model="passwordConfirmation" type="password"
+                            class="form-control bg-dark border-0 text-light" id="password_confirmation">
+                        <div class="invalid-feedback">
+                            Please choose a passwordConfirm.
+                        </div>
                     </div>
                 </div>
 
-            </div>
 
-            <div class="row mt-4 text-center mx-auto">
-                <button class="btn btn-dark" type="submit">
-                    <i v-if="isLoading" class="fa-solid fa-spinner fa-spin me-2"></i>
-                    <span v-if="!isLoading">Modifier</span>
-                </button>
-                <div v-if="errorMessage" style="color: red;">{{ errorMessage }}</div>
-            </div>
-        </form>
+                <div class="col-md-1 my-auto text-center">
+                    <button class="btn btn-outline-success btn-lg" type="submit" style="border-radius: 29vh;">
+                        <i v-if="isLoading" class="fa-solid fa-spinner fa-spin me-2"></i>
+                        <span v-if="!isLoading">&#x2713;</span>
+                    </button>
+                    <div v-if="errorMessage" style="color: red;">{{ errorMessage }}</div>
+                </div>
+            </form>
+            <form class="my-auto col-md-1" @submit.prevent="deleteAccount(userStore.user.id)">
+                <button type="submit" class="btn btn-outline-danger">Supprimer</button>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -146,7 +157,8 @@ const validNewDataUser = (userId) => {
                     console.log("Success : " + res);
                     console.log(formData);
                     isLoading.value = false;
-                    // router.go(0);
+                    userStore.storeUserData(res.data.user)
+                    router.go(0);
                 })
                 .catch(error => {
                     console.log(formData);
@@ -158,9 +170,48 @@ const validNewDataUser = (userId) => {
         }
     }
 }
+
+const deleteAccount = (userId) => {
+    console.log(userId)
+    axios.delete(`/api/users/${userId}`)
+        .then((res) => {
+            userStore.$reset()
+            console.log('Suppr compte :' + res)
+            router.push('/')
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
 </script>
 
+<style>
+body {
+    /* background-color: #1f2937 !important; */
+}
+</style>
+
 <style scoped>
+label {
+    cursor: pointer;
+    font-weight: bold;
+    color: #9ca3af;
+}
+
+h1 {
+    color: #9ca3af;
+    font-weight: bold;
+}
+
+label img:hover {
+    filter: blur(1px) grayscale(1);
+    transition: 0.3s;
+}
+
+.card {
+    background-color: #374151;
+}
+
 .row {
     margin: 0;
 }

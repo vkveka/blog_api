@@ -70,11 +70,10 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
+        $this->authorize('update', $comment);
         $comment->update([
             'content' => $request->content,
             'tags' => $request->tags,
-            'user_id' => $request->user_id,
-            'post_id' => $request->post_id,
         ]);
 
         if ($request->image) {
@@ -98,6 +97,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+        $this->authorize('delete', $comment);
         $comment->delete();
 
         return response()->json([

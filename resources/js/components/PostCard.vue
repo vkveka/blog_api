@@ -30,7 +30,7 @@
             <p class="px-3"><b>#{{ formatTags(post.tags) }}</b></p>
         </div>
         <div class="card-footer" style="display: flex; flex-direction: column;">
-            <div class=" d-flex justify-content-around align-items-center">
+            <div class=" d-flex justify-content-around align-items-center" v-if="(userStore.user)">
                 <form @submit.prevent="addComment(post.id)" method="post" class="d-flex justify-content-center">
 
                     <input v-model="content" type="text" name="comment" :id="`comment_${post.id}`"
@@ -75,9 +75,9 @@
                             <li class="list-group-item" v-for="comment in post.comments" :key="comment.id">
                                 <div class="row">
                                     <div class="text-start col-6">
-                                        <img :src="`images/${post.user.image}`" alt="img user" height="35px"
+                                        <img :src="`images/${comment.user.image}`" alt="img user" height="35px"
                                             width="35px" style="border-radius: 5vh; margin-right: 10px;">
-                                        <b>{{ post.user.pseudo }}</b>
+                                        <b>{{ comment.user.pseudo }}</b>
                                     </div>
                                     <div class="text-end col-6">
                                         <i class="text-secondary">{{ formatDate(comment.created_at) }}</i>
@@ -105,7 +105,8 @@
                                         style="max-width: 50%;"></img>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-6">
+                                    <div class="col-6"
+                                        v-if="(userStore.user && (comment.user_id == userStore.user.id))">
                                         <div @click="showUpdateInput(comment.id, comment.content)"
                                             :id="`editUpdateButton_${comment.id}`" class="text-start">
                                             <button type="button" class="btn btn-outline-warning">
@@ -119,9 +120,10 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <form @submit.prevent="deleteComment(comment.id)" class="text-end col-6">
+                                    <form @submit.prevent="deleteComment(comment.id)" class="text-end col-6"
+                                        v-if="(userStore.user && (comment.user_id == userStore.user.id || userStore.user.role_id == 2))">
                                         <button type="submit" class="btn btn-outline-danger"
-                                            style=" font-size: 0.7em; cursor: pointer; text-decoration: underline;">Supprimer</button>
+                                            style=" font-size: 0.7em;">Supprimer</button>
                                     </form>
                                 </div>
                                 <hr>
@@ -151,7 +153,7 @@ defineProps({
 
 const router = useRouter()
 const userStore = useUserStore();
-const userId = userStore.user.id;
+const userId = userStore.user ? userStore.user.id : null;
 const content = ref("");
 const image = ref(null);
 
@@ -202,7 +204,7 @@ const addComment = (id) => {
     if (image.value) {
         formData.append('image', image.value);
     }
-    axios.post('api/comments/', formData)
+    axios.post('/api/comments/', formData)
         .then((res) => {
             console.log('Success :' + res)
             router.go(0)
@@ -262,7 +264,7 @@ const updateComment = (commentId, postId) => {
 }
 
 const deleteComment = (commentId) => {
-    axios.delete(`api/comments/${commentId}`)
+    axios.delete(`/api/comments/${commentId}`)
         .then((res) => {
             console.log(res.data)
             router.go(0)

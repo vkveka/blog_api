@@ -6,8 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
@@ -130,7 +131,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-
+        Auth::guard('web')->logout();
         return response()->json([
             'status' => true,
             'message' => 'Utilisateur supprimé avec succès !',

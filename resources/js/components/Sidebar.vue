@@ -12,29 +12,29 @@
                 <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                         data-bs-target="#home-collapse" aria-expanded="false">
-                        Home
+                        Liens indisponible
                     </button>
                     <div class="collapse" id="home-collapse" style="">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                            <li><a href="#" class="link-dark rounded text-decoration-none">Overview</a></li>
-                            <li><a href="#" class="link-dark rounded text-decoration-none">Updates</a></li>
-                            <li><a href="#" class="link-dark rounded text-decoration-none">Reports</a></li>
+                            <li><a href="#" class="link-dark rounded text-decoration-none">Liens indisponible</a></li>
+                            <li><a href="#" class="link-dark rounded text-decoration-none">Liens indisponible</a></li>
+                            <li><a href="#" class="link-dark rounded text-decoration-none">Liens indisponible</a></li>
                         </ul>
                     </div>
                 </li>
-                
+
                 <li class="border-top my-3"></li>
                 <li class="mb-1">
                     <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                         data-bs-target="#account-collapse" aria-expanded="false">
-                        Account
+                        Liens indisponible
                     </button>
                     <div class="collapse" id="account-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-4">
-                            <li><a href="#" class="link-dark rounded text-decoration-none">New...</a></li>
-                            <li><a href="#" class="link-dark rounded text-decoration-none">Profile</a></li>
-                            <li><a href="#" class="link-dark rounded text-decoration-none">Settings</a></li>
-                            <li><a href="#" class="link-dark rounded text-decoration-none">Sign out</a></li>
+                            <li><a href="#" class="link-dark rounded text-decoration-none">Liens indisponible</a></li>
+                            <li><a href="#" class="link-dark rounded text-decoration-none">Liens indisponible</a></li>
+                            <li><a href="#" class="link-dark rounded text-decoration-none">Liens indisponible</a></li>
+                            <li><a href="#" class="link-dark rounded text-decoration-none">Liens indisponible</a></li>
                         </ul>
                     </div>
                 </li>
